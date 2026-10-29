@@ -1,22 +1,23 @@
-﻿using System;
+﻿using EstructuraDeDatos.DynamicStructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EstructuraDeDatos.Presentation
 {
     public partial class FrListaBasica : Form
     {
+        private Lista<string> numeros;
         public FrListaBasica()
         {
             InitializeComponent();
-            numeros = new List<int>();
+            numeros = new Lista<string>();
         }
-
-        private List<int> numeros;
 
         public long validateNumber(Control control)
         {
@@ -36,16 +37,29 @@ namespace EstructuraDeDatos.Presentation
 
         private void txtNumero_Validating(object sender, CancelEventArgs e)
         {
-            validateNumber((Control)sender);
+            //validateNumber((Control)sender);
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            long number = validateNumber(txtNumero);
-            if (number != -1)
+            numeros.Add(txtNumero.Text);
+            SetListBoxNumeros();
+            txtNumero.Text = "";
+            //long number = validateNumber(txtNumero);
+            //if (number != -1)
+            //{
+            //    numeros.Add((int)number);
+            //    SetListBoxNumeros();
+            //    txtNumero.Text = "";
+            //}
+        }
+
+        public void SetListBoxNumeros()
+        {
+            listBoxNumeros.Items.Clear();
+            for (int i = 0; i < numeros.Count; i++)
             {
-                numeros.Add((int)number);
-                listBoxNumeros.Items.Add(number);
+                listBoxNumeros.Items.Add(numeros.ElementAt(i));
             }
         }
 
@@ -55,7 +69,7 @@ namespace EstructuraDeDatos.Presentation
 
             if (position >= 0 && position < numeros.Count)
             {
-                numeros.RemoveAt((int)position);
+                numeros.Delete((int)position);
 
                 listBoxNumeros.Items.RemoveAt((int)position);
             }

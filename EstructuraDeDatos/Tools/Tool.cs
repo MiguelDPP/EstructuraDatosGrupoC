@@ -10,6 +10,23 @@ namespace EstructuraDeDatos.Tools
         {
             return long.TryParse(value, out _);
         }
+
+        public static void OpenForm<T>(Form parent) where T : Form, new()
+        {
+            T? newForm = Application.OpenForms.OfType<T>().FirstOrDefault();
+
+
+            if (newForm != null && !newForm.IsDisposed)
+            {
+                newForm.BringToFront();
+            }
+            else
+            {
+                newForm = new T();
+                newForm.MdiParent = parent;
+                newForm.Show();
+            }
+        }
         public static void showProgressbar(StatusStrip strip, string message)
         {
 
