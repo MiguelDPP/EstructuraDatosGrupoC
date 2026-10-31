@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml.Linq;
 
 namespace EstructuraDeDatos.DynamicStructure
 {
@@ -18,10 +19,27 @@ namespace EstructuraDeDatos.DynamicStructure
         }
     }
 
+    public class Paginator<T> where T: class
+    {
+        public T Data { get; set; }
+        public int Page { get; set; }
+        public int TotalPage { get; set; }
+
+        public Paginator(T data, int page, int totalPage)
+        {
+            Data = data;
+            Page = page;
+            TotalPage = totalPage;
+        }
+    }
+
     public class Lista<T> : IListOperation<T> where T : class
     {
         private Node<T> _head;
         private Node<T> _last;
+        private Node<T> _current;
+
+        private int _index;
 
         public int Count { get; set; }
 
@@ -32,6 +50,63 @@ namespace EstructuraDeDatos.DynamicStructure
                 return _head == null;
             }
         }
+
+        public Paginator<T> moveToHead()
+        {
+            if (!IsEmpty)
+            {
+                _current = _head;
+                _index = 0;
+                return new Paginator<T>(_current.Data, _index + 1, Count);
+            }
+
+            return null;
+        }
+
+        public Paginator<T> moveToLast()
+        {
+            if (!IsEmpty)
+            {
+                _current = _last;
+                _index = Count - 1;
+                return new Paginator<T>(_current.Data, _index + 1, Count);
+            }
+
+            return null;
+        }
+        public Paginator<T> moveToRigth()
+        {
+            if (!IsEmpty)
+            {
+                if (_current != _last)
+                {
+                    _index++;
+                    _current = _current.Next;
+                    return new Paginator<T>(_current.Data, _index + 1, Count);
+                }
+                
+            }
+
+            return null;
+        }
+
+        public Paginator<T> moveToLeft()
+        {
+            if (!IsEmpty)
+            {
+                if (_current != _head)
+                {
+                    _index--;
+                    _current = _current.Back;
+                    return new Paginator<T>(_current.Data, _index + 1, Count);
+                }
+
+            }
+
+            return null;
+        }
+
+        
 
         public Lista() {
             Count = 0;
@@ -44,6 +119,7 @@ namespace EstructuraDeDatos.DynamicStructure
             {
                 _head = n;
                 _last = n;
+                _current = n;
             }
             else
             {
@@ -105,6 +181,62 @@ namespace EstructuraDeDatos.DynamicStructure
                 temp = temp.Next;
             }
             return temp.Data;
+        }
+
+        public void Delete(T data)
+        {
+            if (IsEmpty)
+            {
+                return;
+            }
+
+            if (_head.Data == data)
+            {
+                _head = _head.Next;
+                if (IsEmpty)
+                {
+                    _last = null;
+                } else
+                {
+                    _head.Back = null;
+                }
+            }
+            else
+            {
+                Node<T> tempo = _head;
+                while (tempo.Next != null && tempo.Next.Data != data)
+                {
+                    tempo = tempo.Next;
+                }
+
+                if (tempo.Next == null) return;
+
+                Node<T> temp2 = tempo.Next.Next;
+                if (tempo.Next == _last)
+                {
+                    _last = tempo;
+                } else
+                {
+                    temp2.Back = tempo;
+                }
+                tempo.Next = temp2;
+            }
+            Count--;
+        }
+
+        public void Set(int index, T data)
+        {
+            if (index >= 0 && index < Count)
+            {
+                Node<T> temp = _head;
+
+                for(int i = 0; i < index; i++)
+                {
+                    temp = temp.Next;
+                }
+
+                temp.Data = data;
+            }
         }
     }
 }

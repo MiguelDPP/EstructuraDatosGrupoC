@@ -1,5 +1,6 @@
 ﻿using EstructuraDeDatos.Contracts;
 using EstructuraDeDatos.Domain;
+using EstructuraDeDatos.DynamicStructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,62 +21,66 @@ namespace EstructuraDeDatos.Infraestructure
             return _instance;
         }
         #endregion
-        private List<Estudiante> cache;
+        private Lista<Estudiante> cache;
         private Repository<Estudiante, long> _repository;
         public RepositorioEstudiantes(string path)
-
         {
             if (!File.Exists(path))
             {
                 File.Create(path).Close();
             }
             _repository = new Repository<Estudiante, long>(path);
-            cache = _repository.GetAll().ToList();
+            cache = _repository.GetAll();
         }
 
         public void Add(Estudiante entity)
         {
-            cache.Add(entity);
             _repository.Add(entity);
         }
 
         public int Find(long id)
         {
-            
-            return cache.FindIndex(p  => p.Id == id);
+            for (int i = 0; i < cache.Count; i++)
+            {
+                Estudiante data = cache.ElementAt(i);
+                if (data.Id == id)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+
+            //return cache.FindIndex(p  => p.Id == id);
         }
 
         public void Delete(long id)
         {
             _repository.Delete(id);
-            cache.Remove(GetById(id));
         }
 
         public bool Exist(long id)
         {
-            _repository.Exist(id);
-            return cache.Exists(p => p.Id == id);
+            return _repository.Exist(id);
         }
 
-        public IEnumerable<Estudiante> GetAll()
+        public Lista<Estudiante> GetAll()
         {
-            _repository.GetAll();
-            return cache;
+            return _repository.GetAll();
         }
 
         public Estudiante GetById(long id)
         {
-            _repository.GetById(id);
-            return cache.Find(p => p.Id == id);
+            return _repository.GetById(id);
         }
 
         public void Update(Estudiante entity)
         {
-            int index = Find(entity.Id);
-            if (index != -1)
-            {
-                cache[index] =entity;
-            }
+            //int index = Find(entity.Id);
+            //if (index != -1)
+            //{
+            //    cache[index] =entity;
+            //}
             _repository.Update(entity);
         }
 
