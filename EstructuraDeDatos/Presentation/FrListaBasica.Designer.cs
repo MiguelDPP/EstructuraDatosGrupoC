@@ -126,7 +126,7 @@
         private Panel panelCedula;
         private TextBox txtNumero;
         private Label lblNumero;
-        private ListView listView1;
+        private ListView listView;
         private ListBox listBoxNumeros;
         private Button btnAgregar;
         private Button btnEliminar;

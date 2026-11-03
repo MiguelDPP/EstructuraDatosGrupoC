@@ -23,7 +23,6 @@ namespace EstructuraDeDatos.Infraestructure
         private List<Estudiante> cache;
         private Repository<Estudiante, long> _repository;
         public RepositorioEstudiantes(string path)
-
         {
             if (!File.Exists(path))
             {
@@ -41,7 +40,6 @@ namespace EstructuraDeDatos.Infraestructure
 
         public int Find(long id)
         {
-            
             return cache.FindIndex(p  => p.Id == id);
         }
 
