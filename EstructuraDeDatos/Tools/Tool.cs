@@ -6,6 +6,19 @@ namespace EstructuraDeDatos.Tools
 {
     internal class Tool
     {
+        public static bool validatedEmpty(Control control)
+        {
+            if (control == null || control.Text == string.Empty)
+            {
+                control.BackColor = Color.Red;
+                control.Focus();
+                return false;
+            }
+
+            control.BackColor = Color.White;
+            return true;
+        }
+
         public static bool IsNumeric(string value)
         {
             return long.TryParse(value, out _);
