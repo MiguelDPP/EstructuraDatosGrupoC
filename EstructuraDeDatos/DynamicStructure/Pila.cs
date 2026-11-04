@@ -35,6 +35,7 @@ namespace EstructuraDeDatos.DynamicStructure
             NodePila<T> n = new NodePila<T>(data);
             n.Next = Top;
             Top = n;
+            Count++;
         }
 
         public T Pop()
@@ -43,6 +44,8 @@ namespace EstructuraDeDatos.DynamicStructure
 
             NodePila<T> nodePop = Top;
             Top = Top.Next;
+
+            Count--;
 
             return nodePop.Data;
         }
@@ -57,6 +60,7 @@ namespace EstructuraDeDatos.DynamicStructure
         public void Clear()
         {
             Top = null;
+            Count = 0;
         }
 
         public IEnumerator<T> GetEnumerator()
