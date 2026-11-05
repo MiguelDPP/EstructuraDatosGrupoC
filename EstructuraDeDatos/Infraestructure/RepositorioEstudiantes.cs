@@ -40,16 +40,9 @@ namespace EstructuraDeDatos.Infraestructure
 
         public int Find(long id)
         {
-            for (int i = 0; i < cache.Count; i++)
-            {
-                Estudiante data = cache.ElementAt(i);
-                if (data.Id == id)
-                {
-                    return i;
-                }
-            }
+            
 
-            return -1;
+            return _repository.Find(id);
 
             //return cache.FindIndex(p  => p.Id == id);
         }

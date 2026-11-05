@@ -1,4 +1,5 @@
 ﻿using EstructuraDeDatos.Contracts;
+using EstructuraDeDatos.Domain;
 using EstructuraDeDatos.DynamicStructure;
 using EstructuraDeDatos.Persistence;
 using System;
@@ -66,31 +67,43 @@ namespace EstructuraDeDatos.Infraestructure
 
         public void Update(T entity)
         {
-            int index = -1;
-            for (int i = 0; i < _cache.Count; i++)
-            {
-                T data = _cache.ElementAt(i);
-                if (data.Id.Equals(entity.Id))
-                {
-                    index = i;
-                    break;
-                }
-            }
-            if(index != -1)
+
+
+            //foreach (T data in _cache)
+            //{
+            //    if (data.Id.Equals(entity.Id))
+            //    {
+            //        index = i;
+            //        break;
+            //    }
+            //}
+
+            //for (int i = 0; i < _cache.Count; i++)
+            //{
+            //    T data = _cache.ElementAt(i);
+            //    if (data.Id.Equals(entity.Id))
+            //    {
+            //        index = i;
+            //        break;
+            //    }
+            //}
+
+            int index = _cache.FindIndex((data) => data.Id.Equals(entity.Id));
+            if (index != -1)
                 _cache.Set(index, entity);
         }
 
         public bool Exist(E Id)
         {
-            for (int i = 0; i < _cache.Count; i++)
-            {
-                T data = _cache.ElementAt(i);
-                if (data.Id.Equals(Id))
-                {
-                    return true;
-                }
-            }
-            return false;
+            //for (int i = 0; i < _cache.Count; i++)
+            //{
+            //    T data = _cache.ElementAt(i);
+            //    if (data.Id.Equals(Id))
+            //    {
+            //        return true;
+            //    }
+            //}
+            return _cache.Exist((data) => data.Id.Equals(Id));
 
             // Exist
         }
@@ -99,6 +112,22 @@ namespace EstructuraDeDatos.Infraestructure
         public void Commit() 
         {
             _store.SaveAll(_cache);
+        }
+
+        public int Find(E id)
+        {
+            //for (int i = 0; i < cache.Count; i++)
+            //{
+            //    Estudiante data = cache.ElementAt(i);
+            //    if (data.Id == id)
+            //    {
+            //        return i;
+            //    }
+            //}
+
+            return _cache.FindIndex((data) => data.Id.Equals(id));
+
+            //return cache.FindIndex(p  => p.Id == id);
         }
     }
 }

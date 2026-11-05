@@ -1,4 +1,5 @@
-﻿using EstructuraDeDatos.DynamicStructure;
+﻿using EstructuraDeDatos.Domain;
+using EstructuraDeDatos.DynamicStructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,10 +58,15 @@ namespace EstructuraDeDatos.Presentation
         public void SetListBoxNumeros()
         {
             listBoxNumeros.Items.Clear();
-            for (int i = 0; i < numeros.Count; i++)
+            foreach(string nombre in numeros)
             {
-                listBoxNumeros.Items.Add(numeros.ElementAt(i));
+                listBoxNumeros.Items.Add(nombre);
             }
+
+            //for (int i = 0; i < numeros.Count; i++)
+            //{
+            //    listBoxNumeros.Items.Add(numeros.ElementAt(i));
+            //}
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)

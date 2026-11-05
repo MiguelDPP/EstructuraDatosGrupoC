@@ -1,5 +1,6 @@
 ﻿using EstructuraDeDatos.Contracts;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
@@ -33,7 +34,7 @@ namespace EstructuraDeDatos.DynamicStructure
         }
     }
 
-    public class Lista<T> : IListOperation<T> where T : class
+    public class Lista<T> : IListOperation<T>, IEnumerable<T> where T : class
     {
         private Node<T> _head;
         private Node<T> _last;
@@ -62,6 +63,8 @@ namespace EstructuraDeDatos.DynamicStructure
 
             return null;
         }
+
+        
 
         public Paginator<T> moveToLast()
         {
@@ -237,6 +240,67 @@ namespace EstructuraDeDatos.DynamicStructure
 
                 temp.Data = data;
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            Node<T> temp = _head;
+
+            while(temp != null)
+            {
+                yield return temp.Data;
+
+                temp = temp.Next;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public int FindIndex(Predicate<T> check)
+        {
+            Node<T> temp = _head;
+
+            int index = 0;
+
+            while (temp != null)
+            {
+                if (check(temp.Data))
+                {
+                    return index;
+                }
+
+                temp = temp.Next;
+                index++;
+            }
+
+            return -1;
+        }
+
+        //callBack
+        public bool Exist(Predicate<T> check)
+        {
+            Node<T> temp = _head;
+            
+            while (temp != null)
+            {
+                if (check(temp.Data))
+                {
+                    return true;
+                }
+
+                temp = temp.Next;
+            }
+
+            return false;
+        }
+
+        public T FirstOrDefault(Predicate<T> check)
+        {
+
+            return null;
         }
     }
 }
