@@ -1,4 +1,5 @@
-﻿using EstructuraDeDatos.Domain;
+﻿using EstructuraDeDatos.Contracts;
+using EstructuraDeDatos.Domain;
 using EstructuraDeDatos.DynamicStructure;
 using EstructuraDeDatos.Tools;
 using System;
@@ -16,6 +17,8 @@ namespace EstructuraDeDatos.Presentation.Pilas
         private Pila<Disk> _pila1;
         private Pila<Disk> _pila2;
         private Pila<Disk> _pila3;
+        private Pila<Disk> _origen;
+        private int quantity;
 
         private int _cantidadDiscos;
         public FrHanoiTower()
@@ -60,41 +63,45 @@ namespace EstructuraDeDatos.Presentation.Pilas
             }
         }
 
-        private void ActualizarDiscos(Control panel, Pila<Disk> pila)
+        private void SetSize()
         {
-            panel.Controls.Clear();
-
-            int widthPanel = panel.Width;
-            int heightPanel = panel.Height;
+            int widthPanel = panelPila1.Width;
+            int heightPanel = panelPila1.Height;
 
             int heightDisk = heightPanel / _cantidadDiscos;
+            //Ancho minimo
+            int minWidth = (int)(widthPanel * 0.2);
 
-            int positionX = 0;
-            int positionY = 0;
+            //Incremennto
+            int steep = (widthPanel - minWidth) / (_pila1.Count - 1);
 
-            foreach(Disk disco in pila)
+            foreach (Disk disco in _pila1)
             {
-                Panel panelDisk = new Panel
+                disco.SetSize(minWidth, heightDisk);
+                minWidth += steep;
+            }
+        }
+
+        private void ActualizarDiscos(Control panelPila, Pila<Disk> pila)
+        {
+            panelPila.Controls.Clear();
+            if (!pila.IsEmpty)
+            {
+                int positionX = 0;
+                int positionY = panelPila.Height - (pila.Peek().PanelDisk.Height*pila.Count);
+
+                int heightDisk = pila.Peek().PanelDisk.Height;
+
+                foreach (Disk disco in pila)
                 {
-                    Width = widthPanel,
-                    Height = heightDisk,
-                    BackColor = disco.Color,
-                    Location = new Point(positionX, positionY)
-                };
+                    positionX = (panelPila.Width - disco.PanelDisk.Width) / 2;
 
-                positionY += heightDisk;
+                    disco.SetLocation(positionX, positionY);
 
-                Label label = new Label
-                {
-                    Text = disco.Tamanio.ToString(),
-                    //Ajustar al contenedor padre
-                    Dock = DockStyle.Fill,
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
+                    positionY += heightDisk;
 
-                panelDisk.Controls.Add(label);
-
-                panel.Controls.Add(panelDisk);
+                    panelPila.Controls.Add(disco.PanelDisk);
+                }
             }
         }
 
@@ -106,7 +113,7 @@ namespace EstructuraDeDatos.Presentation.Pilas
 
             Random random = new Random();
 
-            for(int i = _cantidadDiscos; i > 0; i--)
+            for (int i = _cantidadDiscos; i > 0; i--)
             {
                 int r = random.Next(0, 255);
                 int g = random.Next(0, 255);
@@ -114,22 +121,71 @@ namespace EstructuraDeDatos.Presentation.Pilas
 
 
                 Disk disco = new Disk(i, Color.FromArgb(r, g, b));
-                
+
 
                 _pila1.Push(disco);
             }
 
+            SetSize();
             ActualizarDiscos(panelPila1, _pila1);
+            ActualizarDiscos(panelPila2, _pila2);
+            ActualizarDiscos(panelPila3, _pila3);
         }
 
         private void btnReboot_Click(object sender, EventArgs e)
         {
             if (int.TryParse(txtDiskNumber.Text, out _cantidadDiscos))
             {
+
                 ReiniciarPilas();
-            } else
+            }
+            else
             {
                 MessageBox.Show("Ingrese un numero valido");
+            }
+        }
+
+        private Pila<Disk> getPila(Panel panel)
+        {
+            switch (panel.Name)
+            {
+                case "panelPila1":
+                    return _pila1;
+                case "panelPila2":
+                    return _pila2;
+                case "panelPila3":
+                    return _pila3;
+            }
+
+            return null;
+        }
+
+        private void panelPila_Click(object sender, EventArgs e)
+        {
+            Panel panel = (Panel)sender;
+
+            if (_origen == null)
+            {
+                _origen = getPila(panel);
+                if (_origen.Count == 0) _origen = null;
+            } else
+            {
+                Pila<Disk> destino = getPila(panel);
+                
+                if (destino.Peek() == null || _origen.Peek().Tamanio < destino.Peek().Tamanio)
+                {
+                    Disk disco = _origen.Pop();
+                    destino.Push(disco);
+                    ActualizarDiscos(panelPila1, _pila1);
+                    ActualizarDiscos(panelPila2, _pila2);
+                    ActualizarDiscos(panelPila3, _pila3);
+
+                    _origen = null;
+                } else
+                {
+                    MessageBox.Show("Error de moviemiento");
+                    _origen = null;
+                }
             }
         }
     }

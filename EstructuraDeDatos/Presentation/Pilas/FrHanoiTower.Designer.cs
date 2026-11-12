@@ -65,29 +65,35 @@
             // panelPila3
             // 
             panelPila3.BackColor = SystemColors.ActiveBorder;
+            panelPila3.Cursor = Cursors.Hand;
             panelPila3.Location = new Point(590, 27);
             panelPila3.Margin = new Padding(3, 4, 3, 4);
             panelPila3.Name = "panelPila3";
             panelPila3.Size = new Size(258, 425);
             panelPila3.TabIndex = 2;
+            panelPila3.Click += panelPila_Click;
             // 
             // panelPila2
             // 
             panelPila2.BackColor = SystemColors.ActiveBorder;
+            panelPila2.Cursor = Cursors.Hand;
             panelPila2.Location = new Point(305, 27);
             panelPila2.Margin = new Padding(3, 4, 3, 4);
             panelPila2.Name = "panelPila2";
             panelPila2.Size = new Size(258, 425);
             panelPila2.TabIndex = 1;
+            panelPila2.Click += panelPila_Click;
             // 
             // panelPila1
             // 
             panelPila1.BackColor = SystemColors.ActiveBorder;
+            panelPila1.Cursor = Cursors.Hand;
             panelPila1.Location = new Point(23, 27);
             panelPila1.Margin = new Padding(3, 4, 3, 4);
             panelPila1.Name = "panelPila1";
             panelPila1.Size = new Size(258, 425);
             panelPila1.TabIndex = 0;
+            panelPila1.Click += panelPila_Click;
             // 
             // btnReboot
             // 

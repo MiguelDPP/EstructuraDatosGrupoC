@@ -17,6 +17,7 @@ namespace EstructuraDeDatos.DynamicStructure
         }
     }
 
+
     public class Pila<T> : IEnumerable<T>, IPila<T> where T: class
     {
         private NodePila<T> Top { get; set; }
@@ -27,6 +28,12 @@ namespace EstructuraDeDatos.DynamicStructure
             {
                 return Top == null;
             }
+        }
+
+        public T Peek()
+        {
+            if (IsEmpty) return null;
+            return Top.Data;
         }
 
         public void Clear()
